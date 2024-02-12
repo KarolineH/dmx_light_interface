@@ -40,9 +40,9 @@ class ASTORA_Lights(object):
         self.ws.send(f'QLC+API|getChannelsValues|1|1|{self.channels}')
         out = self.ws.recv()
         channel_values = np.asarray(out.split('|')[2:]).reshape(-1,3)[:,:2].astype(int) # reformat into the individual channels
-        knob_values = channel_values[:,1].reshape(-1,self.num_lights) # reshape into the individual knobs
-        intensity = knob_values[:,0].tolist()
-        colour_temp = knob_values[:,1].tolist()
+        knob_values = channel_values[:,1].reshape(self.num_knobs,self.num_lights) # reshape into the individual knobs, shape (num_knobs, num_lights)
+        intensity = knob_values[0,:].tolist()
+        colour_temp = knob_values[1,:].tolist()
         return intensity, colour_temp
 
     def send_params(self, params):
